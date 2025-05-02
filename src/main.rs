@@ -1,5 +1,5 @@
 static DAY_IN_SOLAR_YEAR_APPROXIMATE: f64 = 365.2422; //静态变量
-static  mut DAY_IN_YAER: u16 = 365; //可变静态变量
+static  mut DAY_IN_YEAR: u16 = 365; //可变静态变量
 
 fn main() {
     c1_variable();
@@ -42,8 +42,8 @@ fn c2_const_and_static() {
     const SECONDS_IN_SOLAR_YEAR: u64 = 60 * 60 * 24 * 365 + 60 * 60 * 5 + 60 * 48 + 46;
     
     /*unsafe {
-        DAY_IN_YAER = 366;
-        println!("{DAY_IN_YAER}"); //打印可变静态变量
+        DAY_IN_YEAR = 366;
+        println!("{DAY_IN_YEAR}"); //打印可变静态变量
     }*/ //使用`unsafe`修改可变静态变量
     
     println!("One week has {SECONDS_IN_WEEK} seconds |\
@@ -66,9 +66,7 @@ fn c3_data_types() {
 
 fn c3_1_calculate() {
     let a: i32 = 5;
-    let b: i64 = 455;
     let c: f64 = 3.14;
-    let d: f32 = 2.5;
     let e: i32 = 10;
     let f: i32 = 17;
     let add = a + e; //加法
