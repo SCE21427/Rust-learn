@@ -6,6 +6,7 @@ fn main() {
     c2_const_and_static();
     c3_data_types();
     c3_1_calculate();
+    c4_compound_types()
 }
 
 fn c1_variable() {
@@ -76,4 +77,29 @@ fn c3_1_calculate() {
     let rem = e % a; //取余(能整除, 结果为0)
     let rems = f % a; //取余(不能整除）
     println!("{add}, {sub}, {mul}, {div}, {rem}, {rems}");
+}
+
+fn c4_compound_types() {
+    fn array() {
+        let a = [1, 2, 3, 4, 5]; //声明数组, 使用的是最基本的方法
+        let b: [i32/*指定类型为i32*/; 6 /*指定数组的长度为6*/] = [0, 2, 4, 6, 8, 10];
+        let months = ["January", "February", "March", "April", "May", "June", "July",
+            "August", "September", "November", "October", "December"];
+        let a_first = a[0]; //访问数组a的第一个元素
+        let b_second = b[1]; //访问数组b的第二个元素
+        let length = months.len(); //获取数组months的长度
+        println!("{a_first}, {b_second}, {length}");
+    } 
+    
+    fn tuple() {
+        let a = (1, 2, 3); //声明元组
+        let b: (u8, i32, f64) = (7 ,-9, 33.2676); //声明元组, 显式指定类型
+        let c = (1, 2.0, "Hello"); //声明元组, 不同类型
+        let a_first = a.0; //访问元组a的第一个元素
+        let b_second = b.1; //访问元组b的第二个元素
+        let c_third = c.2; //访问元组c的第三个元素
+        println!("{a_first}, {b_second}, {c_third}");
+    }
+    array();
+    tuple();
 }
