@@ -37,7 +37,7 @@
 #### 1.1.1 使用 `mut` 关键字使变量变得可变
 
 ```rust
-fn main() { 
+fn main() {
     let mut y = 5; //可变变量   
     y = 20; //合法修改
 }
@@ -105,16 +105,16 @@ fn c2_const_and_static() {
     }
     /*println!("{A}");*/ //尝试打印不在作用域内的常量A,会报错
     const SECONDS_IN_SOLAR_YEAR: u64 = 60 * 60 * 24 * 365 + 60 * 60 * 5 + 60 * 48 + 46;
-  
+
     /*unsafe {
         DAY_IN_YAER = 366;
         println!("{DAY_IN_YAER}"); //打印可变静态变量
     }*/ //使用`unsafe`修改可变静态变量
-  
+
     println!("One week has {SECONDS_IN_WEEK} seconds |\
     One day has {SECONDS_IN_DAY} seconds |\
     One solar year has {SECONDS_IN_SOLAR_YEAR} seconds");
-  
+
     println!("One solar year has {DAY_IN_SOLAR_YEAR_APPROXIMATE} days");
 }
 ```
@@ -124,11 +124,11 @@ fn c2_const_and_static() {
 #### 1.3.1 整数类型(整型)
 
 1. 整数类型有符号与无符号两种, 分别使用 `i` 和 `u` 前缀.
-   - 有符号整数: `i8`, `i16`, `i32`, `i64`, `i128`, `isize`
-   - 无符号整数: `u8`, `u16`, `u32`, `u64`, `u128`, `usize`
+    - 有符号整数: `i8`, `i16`, `i32`, `i64`, `i128`, `isize`
+    - 无符号整数: `u8`, `u16`, `u32`, `u64`, `u128`, `usize`
 2. 有符号整数不支持负数, 无符号整数支持负数.
-   - 对于有符号整数 `i<x>`, 其支持范围为$[-2^{x-1}, 2^{x-1}-1]$.
-   - 对于无符号整数 `u<x>`, 其支持范围为$[0, 2^{x}-1]$.
+    - 对于有符号整数 `i<x>`, 其支持范围为$[-2^{x-1}, 2^{x-1}-1]$.
+    - 对于无符号整数 `u<x>`, 其支持范围为$[0, 2^{x}-1]$.
 3. 整数类型默认为 `i32`.
 4. 整数类型的大小与平台无关, 但 `isize` 与 `usize` 的大小与平台相关.
 
@@ -194,14 +194,14 @@ Rust 的字符类型是 `char`, 它表示单个 Unicode 字符, 而不是单个�
 ```rust
 //示例: 数据类型
 fn data_type() {
-   let a = 5; //整数, 默认i32
-   let b: i32 = -5; //整数, 显式指定类型为i32
-   let c: u32 = 5; //整数, 显式指定类型为u32, 仅支持自然数
-   let d = 1.14; //浮点数, 默认f64
-   let e: f32 = 3.14; //浮点数, 显式指定类型为f32
-   let t = true; //布尔值
-   let f: bool = false; //布尔值
-   let character = '😅'; //字符类型, 4字节
+    let a = 5; //整数, 默认i32
+    let b: i32 = -5; //整数, 显式指定类型为i32
+    let c: u32 = 5; //整数, 显式指定类型为u32, 仅支持自然数
+    let d = 1.14; //浮点数, 默认f64
+    let e: f32 = 3.14; //浮点数, 显式指定类型为f32
+    let t = true; //布尔值
+    let f: bool = false; //布尔值
+    let character = '😅'; //字符类型, 4字节
 }
 ```
 ---
@@ -213,18 +213,18 @@ Rust 中的所有数字类型都支持基本数学运算：加法、减法、乘
 
 ```rust
 fn calculate() {
-   let a: i32 = 5;
-   let b: u64 = 455432378;
-   let c: f64 = 3.14;
-   let d: f32 = 2.5;
-   let e: i32 = 10;
-   let f: i32 = 17;
-   let add = a + b; //加法
-   let sub = b - d; //减法
-   let mul = d * c; //乘法
-   let div = e / a; //除法
-   let rem = e % a; //取余(能整除, 结果为0)
-   let rems = f % a; //取余(不能整除）
+    let a: i32 = 5;
+    let b: u64 = 455432378;
+    let c: f64 = 3.14;
+    let d: f32 = 2.5;
+    let e: i32 = 10;
+    let f: i32 = 17;
+    let add = a + b; //加法
+    let sub = b - d; //减法
+    let mul = d * c; //乘法
+    let div = e / a; //除法
+    let rem = e % a; //取余(能整除, 结果为0)
+    let rems = f % a; //取余(不能整除）
 }
 ```
 
@@ -259,13 +259,13 @@ fn calculate() {
 ```rust
 // 示例: 数组
 fn array() {
-   let a = [1, 2, 3, 4, 5]; //声明数组, 使用的是最基本的方法
-   let b: [i32/*指定类型为i32*/; 6 /*指定数组的长度为6*/] = [0, 2, 4, 6, 8, 10];
-   let months = ["January", "February", "March", "April", "May", "June", "July",
-         "August", "September", "November", "October", "December"];
-   let a_first = a[0]; //访问数组a的第一个元素
-   let b_second = b[1]; //访问数组b的第二个元素
-   let length = months.len(); //获取数组months的长度
+    let a = [1, 2, 3, 4, 5]; //声明数组, 使用的是最基本的方法
+    let b: [i32/*指定类型为i32*/; 6 /*指定数组的长度为6*/] = [0, 2, 4, 6, 8, 10];
+    let months = ["January", "February", "March", "April", "May", "June", "July",
+        "August", "September", "November", "October", "December"];
+    let a_first = a[0]; //访问数组a的第一个元素
+    let b_second = b[1]; //访问数组b的第二个元素
+    let length = months.len(); //获取数组months的长度
 }
 ```
 ---
@@ -286,59 +286,59 @@ fn array() {
 ```rust
 // 示例: 元组
 fn tuple() {
-   let a = (1, 2, 3); //声明元组
-   let b: (u8, i32, f64) = (7 ,-9, 33.2676); //声明元组, 显式指定类型
-   let c = (1, 2.0, "Hello"); //声明元组, 不同类型
-   let a_first = a.0; //访问元组a的第一个元素
-   let b_second = b.1; //访问元组b的第二个元素
-   let c_third = c.2; //访问元组c的第三个元素
+    let a = (1, 2, 3); //声明元组
+    let b: (u8, i32, f64) = (7 ,-9, 33.2676); //声明元组, 显式指定类型
+    let c = (1, 2.0, "Hello"); //声明元组, 不同类型
+    let a_first = a.0; //访问元组a的第一个元素
+    let b_second = b.1; //访问元组b的第二个元素
+    let c_third = c.2; //访问元组c的第三个元素
 }
 ```
 ---
 > 对于长度可变的多种数据, 应当使用Vector.(见后文)
 ---
 
-## 2 所有权、结构体与枚举
+## 2 所有权与 `String` 类型
 
 ### 2.1 所有权
 
-> - 对于 C/C++ 等语言, 内存管理由程序员手动控制.
-> - 而 Python、Java 等语言, 内存管理由垃圾回收器(Garbage Collector)自动控制.
-> - Rust 采用了所有权(Ownership)机制, 使得内存管理更高效且安全.
+> 1. 对于 C/C++ 等语言, 内存管理由程序员手动控制.
+> 2. 而 Python、Java 等语言, 内存管理由垃圾回收器(Garbage Collector)自动控制.
+> 3. Rust 采用了所有权(Ownership)机制, 使得内存管理更高效且安全.
 
 ---
 
 > **C/C++的内存错误**
 > - 内存泄漏(Memory Leak): 程序分配了内存但没有释放, 导致内存无法使用.
->  ```
+    >  ```
 >  int* ptr = new int[10]; //分配内存
 >  //忘记释放内存
 >  //delete ptr;
 >  ```
 > - 悬垂指针(Dangling Pointer): 指向已释放内存的指针, 访问时会导致错误.
->  ```
+    >  ```
 >  int* ptr = new int[10]; //分配内存
 >  delete ptr; //释放内存
 >  //ptr 仍然指向已释放内存, 即悬垂指针
 >  ```
 > - 重复释放: 多次释放同一块内存, 导致错误.
->  ```
+    >  ```
 >  int* ptr = new int[10]; //分配内存
 >  delete ptr; //释放内存
 >  delete ptr; //重复释放, 导致错误
 >  ```
 > - 数组越界(Array Out of Bounds): 访问数组越界的元素, 导致错误.
->    ```
+    >    ```
 >    int arr[10];
 >    arr[10] = 5; //访问越界, 导致错误
 >    ```
 > - 野指针(Wild Pointer): 指向未分配内存的指针, 访问时会导致错误.
->  ```
+    >  ```
 >  int* ptr; //未初始化指针
 >  *ptr = 10; //访问未分配内存, 导致错误
 >  ```
 > - 使用已释放的内存(Use After Free): 访问已释放的内存, 导致错误.
->  ```
+    >  ```
 >  int* ptr = new int[10]; //分配内存
 >  delete ptr; //释放内存
 >  *ptr = 10; //访问已释放内存, 导致错误
@@ -348,7 +348,123 @@ Rust 最重要的特性之一是**所有权(Ownership)**, 它是 Rust 的内存�
 所有权系统使 Rust 独树一帜, 使其在内存安全性和性能方面都表现出色.
 编译器在编译时会根据一系列的规则进行检查. 如果违反了任何这些规则, 程序都不能编译.
 在运行时, 所有权系统的任何功能都不会减慢程序.</br>
-所有权系统有三大规则: 
+所有权系统有三大规则:
 1. 每个值都有一个所有者(Owner).
 2. 每个值只能有一个所有者.
 3. 当所有者离开作用域时, 值会被丢弃(Drop).
+
+#### 2.1.1 String 类型
+
+- Rust 中的字符串有两种类型: `String` 与 `&str`.</br>
+
+`&str` 是字符串字面值, 是不可变的.
+为此, Rust 提供了另一种字符串类型 `String`, 它是可变的.
+因为 `String` 是可变的, 所以它在堆上分配内存.
+可以通过 `String::from()` 方法创建一个 `String` 类型的字符串:
+```rust
+let s = String::from("Hello, world!");
+```
+可以通过 `push_str()` 方法向 `String` 类型的字符串添加内容:
+```rust
+fn string() {
+    let mut s = String::from("Hello");
+    s.push_str(", world!"); //添加内容
+    println!("{s}"); //将会打印 "Hello, world!"
+}
+```
+
+#### 2.1.2 数据的移动(Move)
+这是普通变量的例子:
+```rust
+let x = 5;
+let y = x;
+println!("x: {x}, y: {y}"); //打印 x 和 y
+```
+如上所示, 先给`x`赋值`5`, 然后将`x`的值赋给`y`.
+这时, `x` 和 `y` 都是 `5`, 但它们是两个不同的变量, 互不影响, `x`与`y`都是可用的.</br>
+但对于`String`类型来说, 情况就不同了:
+```rust
+//错误演示
+let s1 = String::from("Hello");
+let s2 = s1;
+println!("s1: {s1}, s2: {s2}"); //打印 s1 和 s2
+```
+上面的代码会报错, 因为 `s1` 的所有权已经转移给了 `s2`, `s1` 不再有效.
+这叫做 Rust 中的**移动(Move)**.
+
+#### 2.1.3 克隆(Cloning)
+
+如果想要同时保留原数据与移动后的数据, 可以使用 `clone()` 方法.
+```rust
+fn main() {
+    let s1 = String::from("Hello");
+    let s2 = s1.clone(); //克隆
+    println!("s1: {s1}, s2: {s2}"); //打印 s1 和 s2
+}
+```
+上面的代码可以正常运行, 因为 `s1` 和 `s2` 都是有效的.
+
+#### 2.1.4 拷贝
+
+对于简单的数据类型, Rust 会自动进行**拷贝**, 而不是移动.</br>
+可以进行拷贝的数据类型有:
+- 所有整数类型
+- 所有浮点数类型
+- 布尔类型
+- 字符类型`char`
+- 元组, 前提是其所有元素都符合以上可以进行拷贝的数据类型.</br>
+  比如说`(i32, i32)` 可以进行拷贝, 但 `(i32, String)` 不可以进行拷贝.
+
+#### 2.1.5 所有权在函数及返回值中的作用
+##### 所有权与函数
+```rust
+fn main() {
+    let s = String::from("hello");
+    takes_ownership(s); //s的所有权转移到函数中
+    //此时s失效
+    let x = 5;
+    copy(x); //x的值被拷贝到函数中
+    //此时x仍然有效
+} //此时, x与s都被释放, 不过s已经失效了.
+
+fn takes_ownership(strings: String) { //s的所有权转移到函数中
+    println!("s: {strings}");
+}
+
+fn copy(var: i32) {
+    println!("var: {var}");
+}
+```
+##### 所有权与返回值
+```rust
+fn main() {
+    let s1 = back();
+    let s2 = String::from("Hello");
+    let s3 = give_and_back(s2); //s2的所有权转移到函数中
+}
+
+fn back() -> String {
+    let a_string = String::from("Hello");
+    a_string //返回值
+}
+
+fn give_and_back(next_string: String) -> String {
+    next_string
+}
+```
+还能通过元组返回多个值:
+```rust
+fn main() {
+    let s1 = String::from("Hello");
+    let (s, length) = length(s1); //s的所有权转移到函数中
+}
+
+fn length(s: String) -> (String, usize) {
+    let length = s.len();
+    (s, length) //返回值
+}
+```
+---
+
+### 2.2 引用与借用
+

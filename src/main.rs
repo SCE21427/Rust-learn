@@ -6,7 +6,8 @@ fn main() {
     c2_const_and_static();
     c3_data_types();
     c3_1_calculate();
-    c4_compound_types()
+    c4_compound_types();
+    c5_ownership();
 }
 
 fn c1_variable() {
@@ -102,4 +103,85 @@ fn c4_compound_types() {
     }
     array();
     tuple();
+}
+
+fn c5_ownership() {
+    fn string() {
+        let s = String::from("Hello, world!");
+        let mut s1 = String::from("Hello");
+        s1.push_str(", world!"); //添加内容
+        println!("{s} | {s1}"); //将会打印 "Hello, world! | Hello, world!"
+    }
+    fn move_clone() {
+        let x = 5;
+        let y = x;
+        println!("x: {x}, y: {y}"); //打印 x 和 y
+
+        //错误演示
+        let s1 = String::from("Hello");
+        let s2 = s1;
+        /*println!("s1: {s1}, s2: {s2}");*/ //打印 s1 和 s2, 会报错
+
+        let s3 = String::from("Hello");
+        let s4 = s3.clone(); //克隆
+        println!("s1: {s3}, s2: {s4}"); //打印 s1 和 s2
+    }
+    fn fn_and_back() {
+        fn fn1() {
+            fn function() {
+                let s = String::from("hello");
+                takes_ownership(s); //s的所有权转移到函数中
+                //此时s失效
+                let x = 5;
+                copy(x); //x的值被拷贝到函数中
+                //此时x仍然有效
+                println!("x: {}", x);
+            } //此时, x与s都被释放, 不过s已经失效了.
+
+            fn takes_ownership(strings: String) { //s的所有权转移到函数中
+                println!("s: {strings}");
+            }
+
+            fn copy(var: i32) {
+                println!("var: {var}");
+            }
+            function()
+        }
+        fn backs() {
+            fn back1() {
+                let s1 = back();
+                let s2 = String::from("Hello");
+                let s3 = give_and_back(s2); //s2的所有权转移到函数中
+                println!("s1: {s1}, s3: {s3}");
+            }
+
+            fn back() -> String {
+                let a_string = String::from("Hello");
+                a_string //返回值
+            }
+
+            fn give_and_back(next_string: String) -> String {
+                next_string
+            }
+            back1();
+        }
+        fn tuple_back() {
+            fn tuple() {
+                let s1 = String::from("Hello");
+                let (s, length) = length(s1); //s的所有权转移到函数中
+                println!("s: {s}, length: {length}");
+            }
+
+            fn length(s: String) -> (String, usize) {
+                let length = s.len();
+                (s, length) //返回值
+            }
+            tuple();
+        }
+        fn1();
+        backs();
+        tuple_back();
+    }
+    string();
+    fn_and_back();
 }
