@@ -731,3 +731,146 @@ assert_eq!(&[1, 2, 3], slice); //验证
 结构体(Struct)是 Rust 中一种自定义数据类型, 用于将多个相关的数据组合在一起.
 
 #### 3.1.1 定义结构体并实例化
+
+结构体的定义使用 `struct` 关键字, 并提供名字.
+接着, 使用 `{}` 定义每一部分的数据及类型, 我们称其为字段(Field).其格式如下:
+```text
+struct <StructName> {
+    <Name1>: <Type1>,
+    <Name2>: <Type2>,
+    ...
+}
+```
+定义结构体之后, 需要对结构体进行实例化.
+对结构体进行实例化, 需要以结构体名字开头, 然后用 `{}` 包围每一部分的数据,
+并在其中以 `<key>: <value>` 的格式定义每一部分的数据.其格式如下:
+```text
+<StructName> {
+    <key1>: <value1>,
+    <key2>: <value2>,
+    ...
+}
+```
+定义并实例化一个结构体的例子:
+```rust
+// 示例: 结构体
+struct User {
+    username: String,
+    userid: u32,
+    email: String,
+    sign_up_date: String,
+    active: bool,
+} //定义结构体
+fn main() {
+    let user1 = User {
+        username: "UserA".to_string(),
+        userid: 1,
+        email: "someone@example.com".to_string(),
+        sign_up_date: "2023-10-01".to_string(),
+        active: true,
+    }; //实例化结构体
+}
+```
+
+获取结构体字段的值, 需要使用 `.` 符号: `<name>.<field>`,
+其中 `<name>` 是结构体的名字, `<field>` 是字段的名字.例:
+```rust
+// 示例: 结构体
+struct User {
+    username: String,
+    userid: u32,
+    email: String,
+    sign_up_date: String,
+    active: bool,
+} //定义结构体
+fn main() {
+    let user1 = User {
+        username: "UserA".to_string(),
+        userid: 1,
+        email: "someone@example.com".to_string(),
+        sign_up_date: "2023-10-01".to_string(),
+        active: true,
+    }; //实例化结构体
+    user1.userid = 4; //获取结构体字段的值
+}
+```
+我们还可以用函数来实例化结构体, 并隐式返回实例,例如:
+```rust
+struct User {
+    username: String,
+    userid: u32,
+    email: String,
+    sign_up_date: String,
+    active: bool,
+} //定义结构体
+fn set_user(
+    name: String,
+    id: u32,
+    email: String,
+    date: String,
+)
+    -> User {
+     User {
+        username: name,
+        userid: id,
+        email: email,
+        sign_up_date: date,
+        active: true,
+     }
+}
+```
+这样我们就可以通过函数来实例化结构体了.
+
+不过, 有些变量的名称与结构体字段的名称相同, 这时可以使用简写语法来简化代码:
+```rust
+struct TrainTicket {
+    passenger_name: String,
+    price: f32,
+    from: String,
+    arrive_station: String,
+    date: String,
+    train_number: String,
+    carriage_number: u8,
+    seat_number: String,
+    need_hongkong_macau_pass: bool,
+}
+fn ticket(
+    passenger_name: String,
+    price: f32,
+    from: String,
+    arrive_station: String,
+    date: String,
+    train_number: String,
+    carriage_number: u8,
+    seat_number: String,
+    pass: bool,
+) -> TrainTicket {
+    TrainTicket {
+        passenger_name,
+        price,
+        from,
+        arrive_station,
+        date,
+        train_number,
+        carriage_number,
+        seat_number,
+        need_hongkong_macau_pass: pass,
+    }
+}
+fn main() {
+    let ticket1 = ticket(
+        "Li Hua".to_string(),
+        100.0,
+        "Beijing West Railway Station".to_string(),
+        "Hong Kong West Kowlon Station".to_string(),
+        "2025-01-01".to_string(),
+        "G79".to_string(),
+        6,
+        "3C".to_string(),
+        true,
+    ); //实例化结构体
+    println!("Passenger: {}", ticket1.passenger_name);
+    println!("Price: {}", ticket1.price);
+} 
+```
+这样, 当变量名与字段名重复的时候, 我们便不需要重复写变量名了.
