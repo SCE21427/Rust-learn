@@ -8,6 +8,8 @@ fn main() {
     c3_1_calculate();
     c4_compound_types();
     c5_ownership();
+    c6_borrow();
+    c7_slice();
 }
 
 fn c1_variable() {
@@ -184,4 +186,69 @@ fn c5_ownership() {
     }
     string();
     fn_and_back();
+}
+
+fn c6_borrow() {
+    fn borrow() { //引用
+        fn main() {
+            let s1 = String::from("Hello");
+            let len = calculate_length(&s1/*对s1进行引用*/); //传递引用
+            println!("s1: {s1}, len: {len}");
+        }
+        fn calculate_length(s: &String) -> usize { //s是String类型的引用
+            s.len() //返回字符串的长度
+        }
+        main()
+    }
+    /*fn change_borrow() {
+        fn main() {
+            let mut s = String::from("Hello");
+
+            change(&s); //传递不可变引用
+        }
+        fn change(s: &String) {
+            s.push_str(", world!"); //错误, s是不可变引用
+        }
+    }*/ //此处会报错, 因为s是不可变引用, 不能修改
+    
+    fn mutable_borrow() { //可变引用
+        fn main() {
+            let mut s = String::from("Hello");
+            change(&mut s); //传递可变引用
+            println!("s: {s}");
+        }
+        fn change(s: &mut String) {
+            s.push_str(", world!"); //合法, s是可变引用
+        }
+        main();
+    }
+    /*fn multiple_borrow() { //多个可变引用
+        fn main() {
+            let mut s = String::from("Hello");
+            let s1 = &mut s;
+            let s2 = &mut s; //错误, s1与s2都是对s的引用
+            println!("{} | {}", s1, s2);
+        }
+    }*/
+    borrow();
+    mutable_borrow();
+}
+
+fn c7_slice() {
+    //通过slice提取第一个单词
+    fn main() {
+        let s = String::from("Hello, world!");
+        let first = first_word(&s); //传递字符串的引用
+        println!("First word: {first}");
+    }
+    fn first_word(s: &String) -> &str {
+        let bytes = s.as_bytes();
+        for (i, &item) in bytes.iter().enumerate() {
+            if item == b' ' {
+                return &s[0..i]; //返回第一个单词
+            }
+        }
+        &s[..] //返回整个字符串
+    }
+    main();
 }

@@ -1,5 +1,52 @@
 # Rust 学习笔记
 
+---
+
+## 目录
+
+[**前言**](#0-前言)</br>
+[**变量与常见数据类型**](#1-变量与常见数据类型)
+
+- [1.1 Rust 的变量默认不可变](#11-rust-的变量默认不可变)
+  - [1.1.1 使用 `mut` 关键字使变量变得可变](#111-使用-mut-关键字使变量变得可变)
+  - [1.1.2 遮蔽(Shadow)](#112-遮蔽shadow)
+- [1.2 常量(const)与静态变量(static)](#12-常量const与静态变量static)
+  - [1.2.1 常量(const)](#121-常量const)
+  - [1.2.2 静态变量(static)](#122-静态变量static)
+- [1.3 数据类型](#13-数据类型)
+  - [1.3.1 整数类型(整型)](#131-整数类型整型)
+  - [1.3.2 浮点数类型(浮点型)](#132-浮点数类型浮点型)
+  - [1.3.3 布尔类型(bool)](#133-布尔类型bool)
+  - [1.3.4 字符类型(char)](#134-字符类型char)
+  - [1.3.5 数值运算](#135-数值运算)
+- [1.4 复合类型](#14-复合类型)
+  - [1.4.1 数组(Array)](#141-数组array)
+  - [1.4.2 元组(Tuple)](#142-元组tuple)
+---
+[**所有权与 `String` 类型**](#2-所有权与-string-类型)
+- [2.1 所有权](#21-所有权)
+  - [2.1.1 String 类型](#211-string-类型)
+  - [2.1.2 数据的移动(Move)](#212-数据的移动move)
+  - [2.1.3 克隆(Cloning)](#213-克隆cloning)
+  - [2.1.4 拷贝](#214-拷贝)
+  - [2.1.5 所有权在函数及返回值中的作用](#215-所有权在函数及返回值中的作用)
+- [2.2 引用与借用](#22-引用与借用)
+  - [2.2.1 可变引用](#221-可变引用)
+  - [2.2.2 悬垂引用](#222-悬垂引用dangling-reference)
+- [2.3 Slice](#23-slice)
+  - [2.3.1 字符串Slice](#231-字符串-slice)
+  - [2.3.2 数组Slice](#232-数组-slice)
+---
+[**结构体与枚举**](#3-结构体与枚举)
+- [3.1 结构体](#31-结构体struct)
+  
+---
+
+
+## 0 前言
+在 Rust 中, 使用 `//` 进行单行注释, 使用 `/*...*/` 进行多行注释.
+其中 `//` 将注释到行尾, 而 `/*...*/` 则从 `/*` 开始到 `*/` 结束, 可以跨越多行.
+
 > [Rust 官方网站](https://www.rust-lang.org/) </br>
 > [Rust 开发环境搭建](https://www.rust-lang.org/tools/install) </br>
 > [Rust 官方文档](https://doc.rust-lang.org/book/) |
@@ -13,9 +60,7 @@
 > Rust 在[哔哩哔哩](https://www.bilibili.com/)上也有视频教程,
 > 推荐[此视频](https://www.bilibili.com/video/BV1m1sreSEoh/)或[此视频](https://www.bilibili.com/video/BV15y421h7j7/)
 
-## 0 前言
-在 Rust 中, 使用 `//` 进行单行注释, 使用 `/*...*/` 进行多行注释.
-其中 `//` 将注释到行尾, 而 `/*...*/` 则从 `/*` 开始到 `*/` 结束, 可以跨越多行.
+---
 
 ## 1 变量与常见数据类型
 
@@ -468,3 +513,221 @@ fn length(s: String) -> (String, usize) {
 
 ### 2.2 引用与借用
 
+`&` 符号代表**引用(Reference)**, 它允许你使用一个值而不获取所有权.
+```rust
+fn main() {
+    let s1 = String::from("Hello");
+    let len = calculate_length(&s1/*对s1进行引用*/); //传递引用
+}
+fn calculate_length(s: &String) -> usize { //s是String类型的引用
+    s.len() //返回字符串的长度
+}
+```
+此处通过`&s1` 传递了 `s1` 的引用, 而不是 `s1` 的所有权.</br>
+普通引用函数的值是不可以被修改的: 
+```rust
+fn main() {
+    let mut s = String::from("Hello");
+
+    change(&s); //传递不可变引用
+}
+fn change(s: &String) {
+    s.push_str(", world!"); //错误, s是不可变引用
+}
+```
+于是, 代码报错:
+```terminaloutput
+error[E0596]: cannot borrow `*s` as mutable, as it is behind a `&` reference
+ --> src\main.rs:7:5
+  |
+7 |     s.push_str(", world!"); //错误, s是不可变引用
+  |     ^ `s` is a `&` reference, so the data it refers to cannot be borrowed as mutable
+  |
+help: consider changing this to be a mutable reference
+  |
+6 | fn change(s: &mut String) {
+  |               +++
+```
+
+#### 2.2.1 可变引用
+
+在上文我们提到, 引用是不可变的, 要使引用可变, 可以使用 `&mut` 来创建可变引用. 
+```rust
+fn main() {
+    let mut s = String::from("Hello");
+    change(&mut s); //传递可变引用
+}
+fn change(s: &mut String) {
+    s.push_str(", world!"); //合法, s是可变引用
+}
+```
+##### 可变引用的限制
+不过, 可变引用只能够有一个, 也就是说, 在同一作用域内, 不能同时存在多个可变引用.
+```rust
+fn main() {
+    let mut s = String::from("Hello");
+    let s1 = &mut s;
+    let s2 = &mut s; //错误, s1与s2都是对s的引用
+    println!("{} | {}", s1, s2);
+}
+```
+于是, 代码报错:
+```terminaloutput
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+ --> src\main.rs:4:14
+  |
+3 |     let s1 = &mut s;
+  |              ------ first mutable borrow occurs here
+4 |     let s2 = &mut s; //错误, s1与s2都是对s的引用
+  |              ^^^^^^ second mutable borrow occurs here
+5 |     println!("{} | {}", s1, s2);
+  |                         -- first borrow later used here
+```
+- `error[E0499]` 告诉我们, 不能同时进行超过一次可变引用.
+- 这样做避免了数据竞争(Data Race), 也就是两个线程同时访问同一数据, 可能导致数据不一致的问题.
+解决方法也很简单, 只需要新建一个作用域即可.
+```rust
+fn main(){
+    let mut s = String::from("Hello");
+    {
+        let s1 = &mut s; //可变引用
+        println!("{}", s1);
+    } //s1的作用域结束, 可变引用被释放
+    let s2 = &mut s; //合法, 因为s1的作用域已经结束
+    println!("{}", s2);
+}
+```
+也不能同时存在可变引用与不可变引用:
+```rust
+fn main() {
+    let mut s = String::from("HELLO");
+    let s1 = &s; //不可变引用
+    let s2 = &mut s; //错误, s1与s2都是对s的引用
+    println!("{} | {}", s1, s2)
+}
+```
+于是, 代码报错:
+```terminaloutput
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+ --> src\main.rs:4:14
+  |
+3 |     let s1 = &s; //不可变引用
+  |              -- immutable borrow occurs here
+4 |     let s2 = &mut s; //错误, s1与s2都是对s的引用
+  |              ^^^^^^ mutable borrow occurs here
+5 |     println!("{} | {}", s1, s2)
+  |                         -- immutable borrow later used here
+
+```
+- `error[E0502]` 告诉我们, 不能同时进行不可变引用与可变引用.
+- 这仍然是为了避免数据竞争的问题.
+
+#### 2.2.2 悬垂引用(Dangling Reference)
+在具有指针的语言中, 很容易通过释放内存时保留指向它的指针而错误地生成一个**悬垂指针
+(dangling pointer)**, 所谓悬垂指针是其指向的内存可能已经被分配给其它持有者.</br>
+在 Rust 中, 类似于悬垂指针的引用被称为**悬垂引用(dangling reference)**.
+为了避免悬垂引用的情况出现, 编译器需确保数据不会在其引用之前离开作用域.
+以下是一个悬垂引用的例子:
+```rust
+fn main() {
+    let reference_to_nothing = dangle();
+}
+fn dangle() -> &String {
+    let s = String::from("hello");
+    &s 
+}
+```
+于是, 代码报错:
+```terminaloutput
+error[E0106]: missing lifetime specifier
+ --> src\main.rs:4:16
+  |
+4 | fn dangle() -> &String {
+  |                ^ expected named lifetime parameter
+  |
+  = help: this function's return type contains a borrowed value, but there is no value for it to be borrowed from
+help: consider using the `'static` lifetime, but this is uncommon unless you're returning a borrowed value from a `const` or a `static`
+  |
+4 | fn dangle() -> &'static String {
+  |                 +++++++
+help: instead, you are more likely to want to return an owned value
+  |
+4 - fn dangle() -> &String {
+4 + fn dangle() -> String {
+  |
+```
+- `error[E0106]` 告诉我们, 需要一个生命周期参数.
+- `help` 提示我们, 这个函数的返回值包含一个借用的值, 但没有值可以借用.
+
+报错原因是因为 `s` 的作用域在 `dangle()` 函数结束时就结束了, 而我们仍然尝试返回 `s` 的引用.
+这将导致悬垂引用, 因为 `s` 已经被释放了.
+解决方法为直接返回 `s` 的值, 而不是引用:
+```rust
+fn main() {
+    let reference_to_nothing = dangle();
+}
+fn dangle() -> &String {
+    let s = String::from("hello");
+    s 
+}
+```
+代码正常运行.
+
+---
+总而言之, 引用必须满足以下条件:
+1. 在同一时刻内:
+   1. **只能**有一个可变引用.</br>
+      或</br>
+   2. **只能**有多个不可变引用.</br>
+2. 引用必须始终有效.
+
+### 2.3 Slice
+
+Slice 是对数组或字符串的一部分的引用, 它允许你访问数组或字符串的一部分而不获取所有权.
+可以通过 `&<String>[<start_index>..<end_index>]` 的方式创建一个 Slice.
+其中 `<String>` 是需要进行引用的字符串或数组,
+`<start_index>` 是 Slice 的起始索引, `<end_index>` 是 Slice 的结束索引(从0开始).
+
+#### 2.3.1 字符串 Slice
+
+例如, 要把`Hello, world!` 中的2个单词分别提取出来, 可以使用以下代码:
+```rust
+fn main() {
+    let s = String::from("Hello, world!");
+    let first_word = &s[0..5]; //提取前5个字符
+    let second_word = &s[7..12]; //提取后5个字符
+    println!("{slice} | {slice2}");
+}
+```
+以下的方法适用于寻找任意单词:
+```rust
+fn first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i]; //返回第一个单词
+        }
+    }
+    &s[..] //返回整个字符串
+}
+```
+---
+
+#### 2.3.2 数组 Slice
+
+实际上, `slice` 还支持数组. 例如:
+```rust
+let a = [1, 2, 3, 4, 5];
+let slice = &a[0..3]; //提取前3个元素
+assert_eq!(&[1, 2, 3], slice); //验证
+```
+---
+
+
+## 3 结构体与枚举
+
+### 3.1 结构体(Struct)
+
+结构体(Struct)是 Rust 中一种自定义数据类型, 用于将多个相关的数据组合在一起.
+
+#### 3.1.1 定义结构体并实例化
