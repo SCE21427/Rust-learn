@@ -39,6 +39,11 @@
 ---
 [**结构体与枚举**](#3-结构体与枚举)
 - [3.1 结构体](#31-结构体struct)
+  - [3.1.1 定义结构体并实例化](#311-定义结构体并实例化)
+  - [3.1.2 结构体更新语法](#312-结构体更新语法)
+  - [3.1.3 元组结构体](#313-元组结构体)
+  - [3.1.4 类单元结构体](#314-类单元结构体)
+  - [3.1.5 结构体的应用](#315-结构体的应用)
   
 ---
 
@@ -874,3 +879,265 @@ fn main() {
 } 
 ```
 这样, 当变量名与字段名重复的时候, 我们便不需要重复写变量名了.
+
+#### 3.1.2 结构体更新语法
+
+结构体更新语法允许我们只修改一个旧的结构体的某些字段, 而不需要重新定义所有字段.</br>
+这是不使用结构体更新语法的示例:
+```rust
+struct User {
+    username: String,
+    userid: u32,
+    email: String,
+    sign_up_date: String,
+    active: bool,
+}
+fn main() {
+    let user1 = User {
+        username: String::from("User1"),
+        userid: 1,
+        email: String::from("UserA@example.com"),
+        sign_up_date: String::from("2023-10-01"),
+        active: true,
+    };
+    let user2 = User {
+        username: user1.username,
+        userid: 2,
+        email: String::from("another@example.com"),
+        sign_up_date: user1.sign_up_date,
+        active: user1.active,
+    };
+}
+```
+这是使用了结构体更新语法的示例:
+```rust
+struct User {
+    username: String,
+    userid: u32,
+    email: String,
+    sign_up_date: String,
+    active: bool,
+}
+fn main() {
+    let user1 = User {
+        username: String::from("User1"),
+        userid: 1,
+        email: String::from("UserA@example.com"),
+        sign_up_date: String::from("2023-10-01"),
+        active: true,
+    };
+    let user2 = User {
+        userid: 2,
+        email: String::from("another@example.com"),
+        ..user1 //使用结构体更新语法
+    };
+}
+```
+可以发现, 结构体更新语法节省了许多代码. 不过 `..user1` 必须放在最后.</br>
+
+**<font color='yellow'>需要注意</font>**, 结构体更新语法类似于移动,
+故 `user1` 中的被结构体更新语法使用的字段便不能再使用了.
+
+#### 3.1.3 元组结构体
+
+**元组结构体(Tuple Struct)** 类似于普通结构体, 但没有字段名, 只有字段类型.
+
+定义元组结构体的方法与定义普通结构体的方法类似, 只不过没有字段名.
+```rust
+struct Color(u8, u8, u8); //定义元组结构体
+struct Point(i32, i32, i32); //定义元组结构体
+fn main() {
+    let green = Color(0, 255, 0);
+    let origin = Point(0, 0, 0);
+}
+```
+元组结构体间的类型是不互通的, 即使它们拥有着相同的类型.
+例如, 两个同时为 `(i32, i32, i32)` 的结构体 `A` 与 `B` 也不能互通.
+如果尝试把 `A` 的参数传给 `B` , 那么将会报错.
+元组结构体类似于元组, 可以被解构, 也可以通过索引单独访问.
+
+#### 3.1.4 类单元结构体
+
+**类单元结构体 (unit-like struct)** 是没有任何字段的结构体, 也称为单元结构体, 与单元元组类似.
+比如: 
+```rust
+struct AlwaysEqual; //定义类单元结构体
+fn main () {
+    let subject = AlwaysEqual;
+}
+```
+---
+
+#### 3.1.5 结构体的应用
+
+使用结构体能够大大增加代码的可读性.
+以下代码是不使用结构体计算长方体表面积与体积的示例:
+> 长方体的表面积 $S=2ab+2ac+2bc$.</br>
+> 长方体的体积 $V=abc$.</br>
+> 其中 $a,b,c$ 分别为长方体的长、宽、高.</br>
+```rust
+//计算长方体的体积与表面积
+fn volume(a: f64, b: f64, c: f64) -> f64 {
+    a * b * c //计算长方体体积
+} //定义长方体体积计算函数
+
+fn superficial_area(a: f64, b: f64, c:f64) -> f64 {
+    2f64 * a * b + 2f64 * a * c + 2f64 * b * c //计算长方体表面积
+} //定义长方体表面积计算函数
+
+fn main() {
+    //输入数据
+    let length0 = 3;
+    let width0 = 7;
+    let height0 = 11;
+    //将数据转换为f64
+    let length = length0 as f64;
+    let width = width0 as f64;
+    let height = height0 as f64;
+    //计算体积
+    let volume = volume(length, width, height);
+    //计算面积
+    let superficial_area = superficial_area(length, width, height);
+    //输出
+    println!("Volume: {}", volume);
+    println!("Superficial Area: {}", superficial_area);
+}
+```
+体积与面积计算函数的参数过多, 使得代码可读性差.
+并且, 当输入的数据为整数时, 如果使用函数, 需要引入中间变量使其变为 `f64` 浮点数.
+这里改用元组: 
+```rust
+fn volume(v: (f64, f64, f64)) -> f64 {
+    v.0 * v.1 * v.2 //计算长方体体积
+}
+
+fn superficial_area(s: (f64, f64, f64)) -> f64 {
+    2f64 * s.0 * s.1 + 2f64 * s.0 * s.2 + 2f64 * s.1 * s.2 //计算长方体表面积
+}
+
+fn main() {
+    //输入数据
+    let length = 3;
+    let width = 5;
+    let height = 19;
+    //转换类型并传入元组
+    let rect: (f64, f64, f64) = (length as f64, width as f64, height as f64);
+    let volume = volume(rect);
+    let superficial_area = superficial_area(rect);
+    println!("Volume: {}", volume);
+    println!("Superficial Area: {}", superficial_area);
+}
+```
+当我们使用元组时, 容易发现: 使用元组索引而非名字很容易将各个数据弄混.
+这时, 我们可以使用结构体来解决这个问题:
+```rust
+struct Rectangle {
+    length: f64,
+    width: f64,
+    height: f64,
+} //定义长方体结构体
+
+fn volume(r: &Rectangle) -> f64 {
+    r.length * r.width * r.height //计算长方体体积
+}
+
+fn superficial_area(r: &Rectangle) -> f64 {
+    2f64 * r.length * r.width + 2f64 * r.length * r.height + 2f64 * r.width * r.height //计算长方体表面积
+}
+
+fn main() {
+    let length = 4;
+    let width = 11;
+    let height = 9;
+    let rect1 = Rectangle {
+        length: length as f64,
+        width: width as f64,
+        height: height as f64,
+    }; //实例化长方体结构体
+    let volume = volume(&rect1);
+    let superficial_area = superficial_area(&rect1);
+    println!("Volume: {}", volume);
+    println!("Superficial Area: {}", superficial_area);
+}
+```
+使用结构体, 使我们的代码可读性大大提高, 可以省去许多不必要的注释.
+
+---
+> 假如我们需要进行调试, 直接打印结构体的值是非常方便的.
+> 然而, 在一般情况下, 这<font color='72E0C2'>**不可行**</font>.
+> 假如我们尝试打印结构体:
+> ```rust
+> struct Rectangle {
+>     width: u32,
+>     height: u32,
+> }
+> fn main() {
+>     let rect1 = Rectangle {
+>         width: 30,
+>         height: 50,
+>     };
+>     println!("rect1 is {}", rect1);
+> }
+> ```
+> 于是, 代码报错:
+> ```terminaloutput
+> error[E0277]: `Rectangle` doesn't implement `std::fmt::Display`
+>   --> src\main.rs:11:29
+>    |
+> 11 |     println!("rect1 is {}", rect1);
+>    |                             ^^^^^ `Rectangle` cannot be formatted with the default formatter
+>    |
+>    = help: the trait `std::fmt::Display` is not implemented for `Rectangle`
+>    = note: in format strings you may be able to use `{:?}` (or {:#?} for pretty-print) instead
+>    = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+> ```
+> - `error[E0277]` 告诉我们, `Rectangle` 没有实现 `std::fmt::Display` trait.
+> - 不过, 它提示我们, 可以使用 `{:?}` 来打印.
+> ```rust
+> struct Rectangle {
+>     width: u32,
+>     height: u32,
+> }
+> fn main() {
+>     let rect1 = Rectangle {
+>         width: 30,
+>         height: 50,
+>     };
+>     println!("rect1 is {:?}", rect1);
+> }
+> ```
+> 修改后再试一次, 不过仍然无济于事...吗?
+> ```terminaloutput
+> error[E0277]: `Rectangle` doesn't implement `Debug`
+>   --> src\main.rs:11:31
+>    |
+> 11 |     println!("rect1 is {:?}", rect1);
+>    |                               ^^^^^ `Rectangle` cannot be formatted using `{:?}`
+>    |
+>    = help: the trait `Debug` is not implemented for `Rectangle`
+>    = note: add `#[derive(Debug)]` to `Rectangle` or manually `impl Debug for Rectangle`
+>    = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+>    help: consider annotating `Rectangle` with `#[derive(Debug)]`
+>    |
+> 2  + #[derive(Debug)]
+> 3  | struct Rectangle {
+>    |
+> ```
+> 尽管还是报错, 但信息有所变化.
+> - 编译器提示我们, 可以添加 `#[derive(Debug)]` 来解决.
+> 再来一次:
+> ```rust
+> #[derive(Debug)]
+> struct Rectangle {
+>     width: u32,
+>     height: u32,
+> }
+> fn main() {
+>     let rect1 = Rectangle {
+>         width: 30,
+>         height: 50,
+>     };
+>     println!("rect1 is {:?}", rect1);
+> }
+> ```
+> 这一次, 代码成功运行了!
